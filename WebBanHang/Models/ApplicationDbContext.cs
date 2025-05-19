@@ -1,27 +1,27 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+
 namespace WebBanHang.Models
 {
     public class ApplicationDbContext : DbContext
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
+
         }
-        public DbSet<Category> Categories { get; set; }
+        public DbSet<Category> Categories { set; get; }
         public DbSet<Product> Products { set; get; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(modelBuilder);
             //seed data to table Categories
             modelBuilder.Entity<Category>().HasData(
             new Category { Id = 1, Name = "Điện thoại", DisplayOrder = 1 },
             new Category { Id = 2, Name = "Máy tính bảng", DisplayOrder = 2 },
             new Category { Id = 3, Name = "Laptop", DisplayOrder = 3 });
             //seed data to table Product
-
             modelBuilder.Entity<Product>().HasData(
             new Product { Id = 1, Name = "Iphone 7", Price = 300, CategoryId = 1 },
             new Product { Id = 2, Name = "Iphone 7s", Price = 350, CategoryId = 1 },
