@@ -1,8 +1,7 @@
-﻿@model List<Product>
+﻿@model PaginatedList<Product>
 
 <div class="row mb-4">
     <div class="col-md-6">
-        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
         <h2>LIST PRODUCT</h2>
     </div>
     <div class="col-md-6 text-right">
@@ -11,38 +10,67 @@
         </a>
     </div>
 </div>
-<table class="table table-bordered table-striped">
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Price</th>
-            <th>Category</th>
-            <th>Image</th>
-            <th>Action </th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var x in Model)
-        {
-            <tr>
-                <td>@x.Name</td>
-                <td>@x.Price</td>
-                <td>@x.Category.Name</td>
-                <td>
-                    @if (x.ImageUrl != null)
-                    {
-                        <img src="@x.ImageUrl" style="width:100px" />
-                    }
-                </td>
-                <td>
-                    <a asp-action="Update" asp-route-id="@x.Id" class="btn btn-success">
-                        <i class="bi bi-pencil-square"></i> Edit
-                    </a>
-                    <a asp-action="Delete" asp-route-id="@x.Id" class="btn btn-danger">
-                        <i class="bi bi-trash"></i> Delete
-                    </a>
-                </td>
-            </tr>
+
+<div id="product-content">
+    <partial name="_ProductListPartial" model="Model" />
+</div>
+
+<div id="loading-spinner" class="text-center" style="display: none;">
+    <div class="spinner-border text-primary" role="status">
+        <span class="sr-only">Loading...</span>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+    function loadPage(pageNumber) {
+        $("#loading-spinner").show();
+        $("#product-content").css("opacity", "0.5");
+        $.ajax({
+            url: '@Url.Action("GetProductsPage", "Product")',
+            type: 'GET',
+            data: { pageNumber: pageNumber },
+            success: function (result) {
+                $("#product-content").html(result);
+                $("#product-content").css("opacity", "1");
+
+                $("#loading-spinner").hide();
+                window.history.pushState(
+                    { page: pageNumber },
+                    "Page " + pageNumber,
+                    updateQueryStringParameter(window.location.href, "pageNumber", pageNumber)
+                );
+            },
+            error: function (error) {
+                console.log("Error loading page:", error);
+                $("#loading-spinner").hide();
+                $("#product-content").css("opacity", "1");
+                alert("Error loading page. Please try again.");
+            }
+        });
+    }
+
+
+    function updateQueryStringParameter(uri, key, value) {
+        var i = uri.indexOf('#');
+        var hash = i === -1 ? '' : uri.substr(i);
+        uri = i === -1 ? uri : uri.substr(0, i);
+
+        var re = new RegExp("([?&])" + key + "=.*?(&|$)", "i");
+        var separator = uri.indexOf('?') !== -1 ? "&" : "?";
+
+        if (uri.match(re)) {
+            return uri.replace(re, '$1' + key + "=" + value + '$2') + hash;
+        } else {
+            return uri + separator + key + "=" + value + hash;
         }
-    </tbody>
-</table>
+    }
+    window.onpopstate = function(event) {
+        if (event.state && event.state.page) {
+            loadPage(event.state.page);
+        } else {
+            loadPage(1);
+        }
+    };
+    </script>
+}

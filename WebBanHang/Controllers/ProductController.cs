@@ -16,17 +16,43 @@ namespace WebBanHang.Controllers
     {
         private readonly ApplicationDbContext _db;
         private readonly IWebHostEnvironment _hosting;
+        private const int PageSize = 5; // Number of products per page
+
         public ProductController(ApplicationDbContext db, IWebHostEnvironment hosting)
         {
             _db = db;
             _hosting = hosting;
         }
-        //Hiển thị danh sách sản phẩm
-        public IActionResult Index()
+
+        // Standard Index method for initial page load
+        public async Task<IActionResult> Index(int? pageNumber)
         {
-            var productList = _db.Products.Include(x => x.Category).ToList();
+            int page = pageNumber ?? 1; // If no page number specified, default to page 1
+
+            var productsQuery = _db.Products.Include(x => x.Category)
+                .OrderBy(p => p.Id); // You can change the sort order as needed
+
+            var productList = await PaginatedList<Product>.CreateAsync(productsQuery, page, PageSize);
+
             return View(productList);
         }
+
+        // New action method for AJAX requests
+        [HttpGet]
+        public async Task<IActionResult> GetProductsPage(int? pageNumber)
+        {
+            int page = pageNumber ?? 1;
+
+            var productsQuery = _db.Products.Include(x => x.Category)
+                .OrderBy(p => p.Id);
+
+            var productList = await PaginatedList<Product>.CreateAsync(productsQuery, page, PageSize);
+
+            // Return partial view with just the product data
+            return PartialView("_ProductListPartial", productList);
+        }
+
+        // Rest of your controller methods remain unchanged
         //Hiển thị form thêm sản phẩm mới
         public IActionResult Add()
         {
@@ -38,6 +64,7 @@ namespace WebBanHang.Controllers
             });
             return View();
         }
+
         //Xử lý thêm sản phẩm
         [HttpPost]
         public IActionResult Add(Product product, IFormFile ImageUrl)
@@ -62,6 +89,7 @@ namespace WebBanHang.Controllers
             });
             return View();
         }
+
         //Hiển thị form cập nhật sản phẩm
         public IActionResult Update(int id)
         {
@@ -73,12 +101,12 @@ namespace WebBanHang.Controllers
             //truyền danh sách thể loại cho View để sinh ra điều khiển DropDownList
             ViewBag.CategoryList = _db.Categories.Select(x => new SelectListItem
             {
-
                 Value = x.Id.ToString(),
                 Text = x.Name
             });
             return View(product);
         }
+
         //Xử lý cập nhật sản phẩm
         [HttpPost]
         public IActionResult Update(Product product, IFormFile ImageUrl)
@@ -121,6 +149,7 @@ namespace WebBanHang.Controllers
             });
             return View();
         }
+
         private string SaveImage(IFormFile image)
         {
             //đặt lại tên file cần lưu
@@ -145,6 +174,7 @@ namespace WebBanHang.Controllers
             }
             return View(product);
         }
+
         //Xử lý xóa sản phẩm
         [HttpPost, ActionName("Delete")]
         public IActionResult DeleteConfirmed(int id)
