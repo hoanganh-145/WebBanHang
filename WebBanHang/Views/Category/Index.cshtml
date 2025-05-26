@@ -23,10 +23,10 @@
 
     </thead>
     <tbody>
-       @foreach (var x in Model)
+        @foreach (var x in Model)
         {
-           <tr>
-            <td>@x.Name</td>
+            <tr>
+                <td>@x.Name</td>
                 <td>@x.DisplayOrder</td>
                 <td>
                     <a asp-action="Update" asp-route-id="@x.Id" class="btn btn-success">
