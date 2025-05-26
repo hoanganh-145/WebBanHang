@@ -1,0 +1,10 @@
+﻿@model Category
+
+<form asp-action="A" method="post">
+    <input type="hidden" asp-for="Id" />
+    <h2 class="my-3">Confirm to Delete Category name= @Model.Name</h2>
+    <div class="mt-3">
+        <button type="submit" class="btn btn-danger"> Delete </button>
+        <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+    </div>
+</form>

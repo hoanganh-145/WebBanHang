@@ -1,0 +1,20 @@
+﻿@foreach (var p in Model)
+{
+    <div class="card mb-3 col-md-3">
+        <h3 class="card-header">@p.Name</h3>
+        <div class="card-body">
+            <h5 class="card-title">Price: @p.Price </h5>         
+        </div>
+        @if (!string.IsNullOrEmpty(p.ImageUrl))
+        {
+            <img src="/@p.ImageUrl" class="img-fluid" />
+        }       
+        <div class="card-body">
+            <a href="#" class="card-link btn btn-outline-dark">Detail</a>
+            <a href="#" class="card-link btn btn-outline-info">Add To Cart</a>
+        </div>
+        <div class="card-footer text-muted">
+            <h5 class="card-title">Category: @p.Category.Name </h5>
+        </div>
+    </div>
+}
