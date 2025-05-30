@@ -91,47 +91,57 @@ namespace WebBanHang.Controllers
             {
                 image.CopyTo(filestream);
             }
-            return @"images/products/" + filename;
+            return @"/images/products/" + filename;
         }
         //sua
+        #region Update_Product
+        //Hiển thị form cập nhật sản phẩm
         public IActionResult Update(int id)
         {
             var sp = _db.Products.Find(id);
-            ViewBag.DSTHELOAI = _db.Categories.Select(x => new SelectListItem
+            //truyền danh sách thể loại cho View để sinh ra điều khiển DropDownList
+            ViewBag.CategoryList = _db.Categories.Select(x => new SelectListItem
             {
-
                 Value = x.Id.ToString(),
                 Text = x.Name
             });
             return View(sp);
         }
-
         [HttpPost]
-        public IActionResult Update(Product p, IFormFile ImageUrl)
+        public IActionResult Update(Product product, IFormFile ImageUrl)
         {
-
-            var oldProduct = _db.Products.Find(p.Id);
+            var OldProduct = _db.Products.Find(product.Id);
             if (ImageUrl != null)
             {
-
-                p.ImageUrl = SaveImage(ImageUrl);
-
+                //xử lý upload và lưu ảnh đại diện mới
+                product.ImageUrl = SaveImage(ImageUrl);
+                //xóa ảnh cũ (nếu có)
+                if (!string.IsNullOrEmpty(product.ImageUrl))
+                {
+                    var oldFilePath = Path.Combine(_hosting.WebRootPath, product.ImageUrl);
+                    if (System.IO.File.Exists(oldFilePath))
+                    {
+                        System.IO.File.Delete(oldFilePath);
+                    }
+                }
             }
-
             else
             {
-                p.ImageUrl = oldProduct.ImageUrl;
+                product.ImageUrl = OldProduct.ImageUrl;
+                // product.ImageUrl=SaveImage(ImageUrl);
             }
             //cập nhật product vào table Product
-            oldProduct.Name = p.Name;
-            oldProduct.Description = p.Description;
-            oldProduct.Price = p.Price;
-            oldProduct.CategoryId = p.CategoryId;
-            oldProduct.ImageUrl = p.ImageUrl;
+            OldProduct.Name = product.Name;
+            OldProduct.Description = product.Description;
+            OldProduct.Price = product.Price;
+            OldProduct.CategoryId = product.CategoryId;
+            OldProduct.ImageUrl = product.ImageUrl;
             _db.SaveChanges();
-            TempData["success"] = "Product updated success";
+            TempData["success"] = "Cập nhật sản phẩm thành công";
             return RedirectToAction("Index");
+
         }
+        #endregion
 
 
     }
