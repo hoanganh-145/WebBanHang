@@ -1,0 +1,20 @@
+﻿@model Product
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <partial name="ThongBao" />
+    <form asp-action="DeleteConfirmed" method="post">
+        <h2>Confirm to Delete Product</h2>
+        <hr />
+        <input asp-for="Id" type="hidden" />
+
+        <div class="alert alert-info">
+            Do you want to delete <strong>@Model.Name</strong>?
+        </div>
+
+        <button type="submit" class="btn btn-danger">
+            <i class="fas fa-trash-alt"></i> Delete
+        </button>
+
+        <a asp-action="Index" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Back to List
+        </a>
+    </form>
