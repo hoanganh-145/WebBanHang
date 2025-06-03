@@ -5,6 +5,19 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Areas\Customer\**" />
+    <Content Remove="Areas\Customer\**" />
+    <EmbeddedResource Remove="Areas\Customer\**" />
+    <None Remove="Areas\Customer\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="Areas\Customer\Controllers\HomeController.cs" />
+    <Compile Include="Areas\Customer\Controllers\ProductController.cs" />
+    <Compile Include="Areas\Customer\Models\CategoryViewModel.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="bootstrap" Version="5.3.6" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.17" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="5.0.17" />
@@ -19,11 +32,18 @@
   <ItemGroup>
     <Folder Include="Areas\Admin\Data\" />
     <Folder Include="Areas\Admin\Models\" />
-    <Folder Include="Areas\Customer\Controllers\" />
     <Folder Include="Areas\Customer\Data\" />
-    <Folder Include="Areas\Customer\Models\" />
-    <Folder Include="Areas\Customer\Views\" />
     <Folder Include="wwwroot\images\products\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Areas\Customer\Views\Home\Index.cshtml" />
+    <None Include="Areas\Customer\Views\Home\Privacy.cshtml" />
+    <None Include="Areas\Customer\Views\Home\_ProductPartial.cshtml" />
+    <None Include="Areas\Customer\Views\Product\Index.cshtml" />
+    <None Include="Areas\Customer\Views\Product\ProductPartial.cshtml" />
+    <None Include="Areas\Customer\Views\_ViewImports.cshtml" />
+    <None Include="Areas\Customer\Views\_ViewStart.cshtml" />
   </ItemGroup>
 
 </Project>

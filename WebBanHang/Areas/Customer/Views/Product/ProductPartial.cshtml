@@ -1,0 +1,31 @@
+﻿<h3 class="text-uppercase">PRODUCT LIST OF @ViewBag.CATEGORY_NAME</h3>
+
+<div class="row">
+
+    @foreach (var p in Model)
+    {
+        <div class="card mb-3 col-md-4">
+            <h3 class="card-header">@p.Name</h3>
+            <div class="card-body">
+                <h5 class="card-title">Price: @string.Format("{0:#,#,#00} USD", p.Price)</h5>
+
+            </div>
+            @if (!string.IsNullOrEmpty(p.ImageUrl))
+            {
+                <img src="/@p.ImageUrl" class="img-fluid" />
+            }
+            else
+            {
+                <svg xmlns="http://www.w3.org/2000/svg" class="d-block user-select-none" width="100%" height="200" aria-label="Placeholder: Image cap" focusable="false" role="img" preserveAspectRatio="xMidYMid slice" viewBox="0 0 318 180" style="font-size:1.125rem;text-anchor:middle">
+                    <rect width="100%" height="100%" fill="#868e96"></rect>
+                    <text x="50%" y="50%" fill="#dee2e6" dy=".3em">Image cap</text>
+                </svg>
+            }
+            <div class="card-body">
+                <a href="#" class="card-link">Details</a>
+                <a href="#" class="card-link">Add To Cart</a>
+            </div>
+        </div>
+    }
+
+</div>

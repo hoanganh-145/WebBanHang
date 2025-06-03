@@ -4,7 +4,7 @@
         <h3 class="card-header">@p.Name</h3>
         <div class="card-body">
             <h5 class="card-title">Price: @p.Price</h5>
-
+            <h5 class="card-title">Category: @p.Category.Name</h5>
         </div>
         @if (!string.IsNullOrEmpty(p.ImageUrl))
         {
@@ -22,7 +22,7 @@
             <a href="#" class="card-link">Add To Cart</a>
         </div>
         <div class="card-footer text-muted">
-            <h5 class="card-title">Category: @p.Category.Name</h5>
+            2 days ago
         </div>
     </div>
 }

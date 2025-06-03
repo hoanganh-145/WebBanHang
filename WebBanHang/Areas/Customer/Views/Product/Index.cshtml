@@ -1,0 +1,38 @@
+﻿<div class="row">
+    <div id="category-list" class="col-md-3">
+        <h3>CATEGORY LIST</h3>
+        <ul class="list-group">
+            @foreach (var c in (List<CategoryViewModel>)ViewBag.DSLOAI)
+            {
+                <a asp-action="Index" asp-route-catid="@c.Id" data-catid="@c.Id"
+                   class="catid-item list-group-item d-flex justify-content-between align-items-center">
+                    @c.Name
+                    <span class="badge bg-light text-dark rounded-pill">@c.ToTalProduct</span>
+                </a>
+            }
+        </ul>
+    </div>
+    <div id="product-list" class="col-md-9">
+        <partial name="ProductPartial" />
+
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(".catid-item").click(function (evt) {
+            evt.preventDefault();
+            let catid = $(this).data("catid");
+            $.ajax({
+                url: "/Customer/Product/LoadPartial",
+                data: { catid: catid },
+                success: function (data) {
+                    $('#product-list').html(data),
+                }
+            });
+        });
+    </script>
+
+}
+
+
